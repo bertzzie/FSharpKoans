@@ -33,10 +33,12 @@ module ``about discriminated unions`` =
 
         let choice = Mustard
 
-        AssertEquality (toColor choice) __
+        AssertEquality (toColor choice) "yellow"
 
         (* TRY IT: What happens if you remove a case from the above pattern 
                    match? *)
+        // Compiler warning: [FS0025] Incomplete pattern matches on this expression.
+        //                   For example, the value 'Vinegar' may indicate a case not covered by the pattern(s).
 
     [<Koan>]
     let DiscriminatedUnionCasesCanHaveTypes() =
@@ -51,5 +53,8 @@ module ``about discriminated unions`` =
         let bourbonResult = saySomethingAboutYourFavorite <| Bourbon "Maker's Mark"
         let numberResult = saySomethingAboutYourFavorite <| Number 7
         
-        AssertEquality bourbonResult __
-        AssertEquality numberResult __
+        AssertEquality bourbonResult "I prefer Bookers to Maker's Mark"
+        AssertEquality numberResult "me too!"
+        
+        let test = saySomethingAboutYourFavorite <| Bourbon "Bookers"
+        AssertEquality test "me too!"

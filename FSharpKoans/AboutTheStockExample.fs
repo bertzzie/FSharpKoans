@@ -27,6 +27,7 @@ open FSharpKoans.Core
 //---------------------------------------------------------------
 [<Koan(Sort = 15)>]
 module ``about the stock example`` =
+    open System.Globalization
     
     let stockData =
         [ "Date,Open,High,Low,Close,Volume,Adj Close";
@@ -60,6 +61,24 @@ module ``about the stock example`` =
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+        let splitCommas (x: string) =
+            x.Split([|','|])
+            
+        let highLowDiff (row: string[]) =
+            let high = System.Double.Parse(row.[1],CultureInfo.InvariantCulture)
+            let low = System.Double.Parse(row.[4],CultureInfo.InvariantCulture)
+            let diff = abs (high - low)
+            diff
         
-        AssertEquality "2012-03-13" result
+        let extractor (row: string) =
+            let split = splitCommas row
+            let diff = highLowDiff split
+            (split.[0], diff)
+        
+        let result =
+            stockData
+            |> List.tail
+            |> List.map extractor
+            |> List.maxBy (fun (date, diff) -> diff)
+        
+        AssertEquality "2012-03-13" (fst result)
